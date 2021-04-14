@@ -278,5 +278,23 @@ eureka.client.serviceUrl.defaultZone=http://balaji:randompwd@localhost:9210/eure
 Thats all and the client is now ready to connect to Eureka after restart.   
 
 # Step 9: Creating the API Gateway  
+a. The dependencies that are needed for the api-gateway are - Cloud config client for fetching the centralized configuration, Eureka client for registering with discovery services and Spring cloud Gatway server.  
+Add then as follows. 
 
+```xml 
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+``` 
+
+b. Check if the dependences are downloaded and if the server is starting successfully after this.  
 
