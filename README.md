@@ -1,7 +1,8 @@
 # Microservices
 This has details to building microservices from scratch
 
-# Port Details
+# Port Details  
+##(will be updated as and when new services are added)  
 ### Spring Cloud Config Server
 server.port=9100
 
@@ -28,23 +29,35 @@ server.port=9100
 c. Create a local config folder called git-config-repo and save this file as <application_name>.properties  
 eg. login-service.properties  
 
-d. Now go to this folder in command prompt and create a local git hub reposistory. This is where all the configurations will reside. The following is commands that need to be run for this.
+d. Now go to this folder in command prompt and create a local git reposistory. This is where all the configurations will reside. The following is commands that need to be run for this.
 cd git-config-repo  
 git init  
 git add .  
 git commit -m "Initial commit"  
 
 e. The final configuration is to tie this git config folder in the config server property file. This can be done by add the following line in the application.properties file.  
-spring.cloud.config.server.git.uri=file:///Users/balaji/eclipse-workspace/MicroservicesV03/git-config-repo
+spring.cloud.config.server.git.uri=file:///Users/balaji/eclipse-workspace/Microservices/git-config-repo  
+
+f. Please note that in my case I pushed all my config files into the centralized github and pulled them up during the application startup rather than maintaing it locally.  
+For this instead of the above line I did the below configuration after pushing my config files to github  
+spring.cloud.config.server.git.uri=https://github.com/balaji1974/microservices  
+spring.cloud.config.server.git.searchPaths=git-config-repo  
+spring.cloud.config.server.git.default-label=main  
+(the above line depends on your branch name in github - avoiding master :))   
+
+Add the user name and password as below in case of private repository  
+spring.cloud.config.server.git.username=   
+spring.cloud.config.server.git.password=   
+
 
 f. Add the following annotation in the main class to make spring aware that this is a configuration server 
 @EnableConfigServer
 
 g. Start the server and use the browser to go to the following url:  
 http://localhost:9100/login-service/default  
-If a json respone with the config file content is displayed then everything is working fine. 
+If a json respone with the config file content is displayed then everything is working fine.  
 
-With this the config server is ready to pick the configuration files from the central git repo.
+With this the config server is ready to pick the configuration files from the central git repo.  
 
 # Step 2: Connecting the client services to the config server.
 
@@ -61,12 +74,12 @@ b. In the application.properties file enter the application name. This name shou
 spring.application.name=login-service
 
 c. Finally connect the client to the config server with the following line.  
-spring.config.import=optional:configserver:http://localhost:9100
+spring.config.import=optional:configserver:http://localhost:9100  
 
-With this the client will be able to fetch all the configurations from the central config server.
+With this the client will be able to fetch all the configurations from the central config server.  
 
 
-# Step 3: Adding multiple enviroment properties to the config server 
+# Step 3: Adding multiple enviroment properties to the config server   
 Make the copy of the properties file that as created earlier and create files for dev and test enviroments as  
 login-service-dev.properties  
 login-service-test.properties  
@@ -76,11 +89,13 @@ Excute the following command in git for these files.
 git add .  
 git commit -m "Added new enviroment files"  
 
+If the repository is located in github push these files.  
+
 Now restart the config server and check if the files load properly with the following url:  
 http://localhost:9100/login-service/dev  
 http://localhost:9100/login-service/test  
 
-Next is to configure the client for the different enviroments. For this add the below line of code in the application.properties file of the client service.  
+Now to configure the client for the different enviroments we need to add the below line of code in the application.properties file of the client service.   
 spring.profiles.active=test  
 
 If the above does not work [in some versions of spring because of bug] we need to add the below line also. For me it works and the below line is not needed.  
@@ -261,4 +276,7 @@ to
 eureka.client.serviceUrl.defaultZone=http://balaji:randompwd@localhost:9210/eureka   
 
 Thats all and the client is now ready to connect to Eureka after restart.   
+
+# Step 9: Creating the API Gateway  
+
 
