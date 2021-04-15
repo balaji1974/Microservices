@@ -284,7 +284,7 @@ Thats all and the client is now ready to connect to Eureka after restart.
 
 # Step 9: Creating the API Gateway  
 a. The dependencies that are needed for the api-gateway are - Cloud config client for fetching the centralized configuration, Eureka client for registering with discovery services and Spring cloud Gatway server.  
-Add then as follows. 
+Add then as follows  
 
 ```xml 
 <dependency>
@@ -301,17 +301,18 @@ Add then as follows.
 </dependency>
 ``` 
 
-b. Check if the dependences are downloaded and if the server is starting successfully after this.  
+b. Check if the dependences are downloaded and if the server is starting successfully after this  
 
-c. Add the following configuration properties in the API-Gateway propeties file that is stored in the github and commit it.  
+c. Add the following configuration properties in the API-Gateway propeties file that is stored in the github and commit it  
+(As usual create 3 properties file for each enivornment and add this into all these 3 properties file)  
 
 spring.cloud.gateway.discovery.locator.enabled=true  
 spring.cloud.gateway.discovery.locator.lower-case-service-id=true   
 
-This will allow the api gateway to discover other services that are registered in Eureka and this will also allow other microservices to be called using the API gateway URL.  
+This will allow the api gateway to discover other services that are registered in Eureka and this will also allow other microservices to be called using the API gateway URL   
 
 As a next step our login microservice was called using the below URL  
-http://localhost:8110/login. 
+http://localhost:8110/login  
 
 Now it can be accessed using the API gateway URL as follows:   
 http://localhost:9010/login-service/login  
