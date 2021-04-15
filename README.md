@@ -317,5 +317,28 @@ http://localhost:8110/login
 Now it can be accessed using the API gateway URL as follows:   
 http://localhost:9010/login-service/login  
 
+d. Please note that API gateway is not only for adding your cross cutting concerns but it can be used for various routing options that are needed for your microservice.  
+This can be achieved by the following configuration class that can be added into the gateway:  
+@Configuration  
+public class ApiGatewayConfiguration<PredicateSpec> {  
+
+&nbsp;&nbsp;&nbsp;@Bean
+&nbsp;&nbsp;&nbsp;public RouteLocator gatewayRouter(RouteLocatorBuilder builder) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return builder.routes()
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.route(p -> p
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.path("/mytest-api")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.filters(f -> f
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addRequestHeader("MyHeader", "MyURI")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addRequestParameter("Param", "MyValue"))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.uri("http://httpbin.org:80"))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.route(p -> p.path("/login/**")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.uri("lb://login"))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.build();
+&nbsp;&nbsp;&nbsp;}
+}
+The above is just a sample of what can be achieved with the router inside API gateway like injecting headers, performing alternate routes, going for a loadbalancer url etc   
+
+
+
 
 
