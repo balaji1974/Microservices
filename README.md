@@ -303,3 +303,18 @@ Add then as follows.
 
 b. Check if the dependences are downloaded and if the server is starting successfully after this.  
 
+c. Add the following configuration properties in the API-Gateway propeties file that is stored in the github and commit it.  
+
+spring.cloud.gateway.discovery.locator.enabled=true  
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true   
+
+This will allow the api gateway to discover other services that are registered in Eureka and this will also allow other microservices to be called using the API gateway URL.  
+
+As a next step our login microservice was called using the below URL  
+http://localhost:8110/login. 
+
+Now it can be accessed using the API gateway URL as follows:   
+http://localhost:9010/login-service/login  
+
+
+
