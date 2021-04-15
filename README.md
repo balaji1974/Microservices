@@ -12,6 +12,11 @@ server.port=9200 (prod)
 server.port=9210 (test)  
 server.port=9220 (dev)  
 
+### Spring Cloud API Gateway  
+server.port=9000 (prod)  
+server.port=9010 (test)  
+server.port=9020 (dev)  
+
 # Step 1: Build the cloud config server (for centralized configuration management)
 
 a. Include the following dependency in the pom.xml 
