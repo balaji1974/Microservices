@@ -383,5 +383,11 @@ This method should have an Exception class as its parameter:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "This is fallback response";  
 &nbsp;&nbsp;&nbsp;}  
 
+f. @CircuitBreaker(name="default", fallbackMethod="helloFallback")  
+This annotation is used for circuit breaker configuration. It will break the circuit and will not call the method if it fails continously and will directly call the fallback method after n number of retries.  
+
+Many other configuration settings like bulkhead, ratelimiter and timelimiter are possible with resilience4j.   
+You can explore the configuration document at https://resilience4j.readme.io/docs/getting-started-3    
+
 
 
