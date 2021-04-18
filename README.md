@@ -339,8 +339,49 @@ public class ApiGatewayConfiguration<PredicateSpec> {
 The above is just a sample of what can be achieved with the router inside API gateway like injecting headers, performing alternate routes, going for a loadbalancer url from Eureka etc   
 
 
-# Step 10 How do we handle if something goes wrong between microservices calls. Implementing Circuit Breakers in our microservices chain using resillence4j is what we will see next 
+# Step 10 How do we handle if something goes wrong between microservices calls. Implementing Circuit Breakers in our microservices chain using resillence4j is what we will see next   
+a. Lets add resilience4j dependency in the login microservice to test our application. The two dependencies needed are:   
+```xml   
+<dependency>  
+	<groupId>org.springframework.boot</groupId>  
+	<artifactId>spring-boot-starter-aop</artifactId>  
+</dependency>  
+<dependency>  
+	<groupId>io.github.resilience4j</groupId>  
+	<artifactId>resilience4j-spring-boot2</artifactId>  
+</dependency>  
+```   
+b. Lets create a new method in our Login Controller to test the retry and circuit breaker logic  
+&nbsp;&nbsp;&nbsp;@GetMapping("/hello")   
+&nbsp;&nbsp;&nbsp;public String helloWorld() throws RuntimeException{  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logger.info("Method is being called");  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(true) throw new RuntimeException();  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "Hello World";  
+&nbsp;&nbsp;&nbsp;}  
 
+c. Check if application starts and if this method is accesssable but throws exception.   
+Now add the following annotation to this method.   
+@Retry(name="default")   
+
+This will retry this method for 3 times before an error is thrown. This is the defaulf behaviour of the retry method.  
+
+d. Now add a named retry annotation as follows instead of the default so that we can configure the retry behaviour in the application.properties file.  
+@Retry(name="hello-api")   
+
+In the application properties file add the following lines:  
+resilience4j.retry.instances.hello-api.maxAttempts=5  
+resilience4j.retry.instances.hello-api.waitDuration=2s  
+resilience4j.retry.instances.hello-api.enable-exponential-backoff=true   
+
+This will have a maximum of 5 retries with wait duration of 2 seconds between retries and also an exponential backoff beween subsequent retries.  
+
+e. A fallback method can be configured in the @Retry annotation as follows:  
+@Retry(name="hello-api" , fallbackMethod="helloFallback")  
+
+This method should have an Exception class as its parameter:  
+&nbsp;&nbsp;&nbsp;public String helloFallback(Exception e) {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "This is fallback response";  
+&nbsp;&nbsp;&nbsp;}  
 
 
 
