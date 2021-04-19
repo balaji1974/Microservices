@@ -1,4 +1,4 @@
-# Microservices
+# Microservices in 10 Steps  
 This has details to building microservices from scratch
 
 # Port Details  
@@ -389,7 +389,8 @@ This annotation is used for circuit breaker configuration. It will break the cir
 Many other configuration settings like bulkhead, ratelimiter and timelimiter are possible with resilience4j.   
 You can explore the configuration document at https://resilience4j.readme.io/docs/getting-started-3    
 
-
+<hr>
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
-
-## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I will start seperate repo for each of them. Please refer them. 
+<hr>
+## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I will start seperate repo for each of them. Please refer them.  
+</hr>  
