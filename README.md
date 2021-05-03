@@ -410,7 +410,31 @@ https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md
 
 Alternatively if you want to start zipkin as a Spring boot project I have included a project named zipkin-tracing-server that can be used, but this supports Java 8 and hence it is not advisable to use this.    
 
+b. Next add the following dependencies into our pom.xml file, in our case the two needed projects into which this must be added are login-service and api-gateway.   
+```xml   
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+</dependency>
+```   
 
+c. Next add the following configuration into the application.properties files of these 2 projects, in our case into the github repo and commit it.   
+spring.sleuth.sampler.probability=1    
+spring.zipkin.baseUrl=http://127.0.0.1:9300   
+
+Note that 1=100% rate of sampling and 0.5 means 50% etc.    
+Also, the zipkin base url must be specified in these 2 projects only if the default zipkin port is changed from 9411    
+
+d. Now restart the api-gateway and the login-service and launch the url for the login-service through the api-gateway and see it getting traced in the zipkin console at http://127.0.0.1:9300/zipkin/    
+
+e. By this we have configured all our microservices to be traced by unique id using cloud slueth and zipkin across multiple service calls that happen internally.   
+
+# Step 12: Connect Zipkin and microservices to an intermediate middleware like Kafka/Rabit MQ.   
+   
 
 
 
