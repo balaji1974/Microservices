@@ -1,4 +1,4 @@
-# Microservices in 10 Steps  
+# Microservices - Step by Step      
 This has details to building microservices from scratch
 
 # Port Details  
@@ -16,6 +16,10 @@ server.port=9220 (dev)
 server.port=9000 (prod)  
 server.port=9010 (test)  
 server.port=9020 (dev)  
+
+
+### Zipkin (distrubuted tracing)    
+QUERY_PORT=9300   
 
 # Step 1: Build the cloud config server (for centralized configuration management)
 
@@ -388,6 +392,27 @@ This annotation is used for circuit breaker configuration. It will break the cir
 
 Many other configuration settings like bulkhead, ratelimiter and timelimiter are possible with resilience4j.   
 You can explore the configuration document at https://resilience4j.readme.io/docs/getting-started-3    
+
+
+# Step 11: Distributed tracing with Zipkin 
+
+a. Download openzipkin server from the following URL:   
+https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=exec    
+Once it is done copy the jar file into a zipkin folder and start it with the following command: (min Java 8 needed)    
+java -jar zipkin-server-2.23.2-exec.jar    
+Check if zipkin started correctly by going to the following url from the browser:   
+http://127.0.0.1:9411/zipkin/   
+
+Start zipkin in our own custom port:   
+Zipkin can be started in our own custom port using the command java -jar zipkin-server-2.23.2-exec.jar --QUERY_PORT=9300     
+A host of other parameters can be configured during startup which is given in the below document url.    
+https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md 
+
+Alternatively if you want to start zipkin as a Spring boot project I have included a project named zipkin-tracing-server that can be used, but this supports Java 8 and hence it is not advisable to use this.    
+
+
+
+
 
 ---   
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
