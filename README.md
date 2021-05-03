@@ -404,7 +404,8 @@ Check if zipkin started correctly by going to the following url from the browser
 http://127.0.0.1:9411/zipkin/   
 
 Start zipkin in our own custom port:   
-Zipkin can be started in our own custom port using the command java -jar zipkin-server-2.23.2-exec.jar --QUERY_PORT=9300     
+Zipkin can be started in our own custom port using the command    
+java -jar zipkin-server-2.23.2-exec.jar --QUERY_PORT=9300     
 A host of other parameters can be configured during startup which is given in the below document url.    
 https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md 
 
