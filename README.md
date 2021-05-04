@@ -26,8 +26,10 @@ Default ports were used
 ZooKeeper=2181   
 Kafka=9092  
 
-### Elastic Search (To store tracelog)
-http.port: 9400
+### Elastic Search (To store tracelog)    
+http.port: 9400    
+transport.port: 9500    
+(or else default will be 9300 and wwill conflict with my zipkin port)
 
 
 # Step 1: Build the cloud config server (for centralized configuration management)
