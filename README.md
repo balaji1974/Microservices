@@ -432,7 +432,7 @@ Also, the zipkin base url must be specified in these 2 projects only if the defa
 
 d. Now restart the api-gateway and the login-service and launch the url for the login-service through the api-gateway and see it getting traced in the zipkin console at http://127.0.0.1:9300/zipkin/    
 
-e. By this we have configured all our microservices to be traced by unique id using cloud slueth and zipkin across multiple service calls that happen internally.   
+e. By this we have configured our two microservices to be traced by unique id using cloud slueth and zipkin across multiple service calls that happen internally.   
 
 # Step 12: Connect Zipkin and microservices to an intermediate middleware like Kafka/Rabit MQ.   
    
