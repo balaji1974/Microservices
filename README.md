@@ -21,6 +21,15 @@ server.port=9020 (dev)
 ### Zipkin (distrubuted tracing)    
 QUERY_PORT=9300   
 
+### Zoo Keeper and Apache Kakfa (middleware)   
+Default ports were used   
+ZooKeeper=2181   
+Kafka=9092  
+
+### Elastic Search (To store tracelog)
+http.port: 9400
+
+
 # Step 1: Build the cloud config server (for centralized configuration management)
 
 a. Include the following dependency in the pom.xml 
@@ -447,7 +456,7 @@ In our case I am using kafka as the middleware so so the dependency I added for 
 </dependency>
 ```  
 
-c. Next I start Apache Kafka and the default topic that would be created by cloud sluth for publishing is "zipkin"   
+c. Next I start Apache Kafka (check my kafka repository for details) and the default topic that would be created by cloud sluth for publishing is "zipkin"   
 
 d. Next we need to add the following properties in our API gateway and Login service properties files:   
 spring.zipkin.baseUrl=http://127.0.0.1:9300  -> This has to be commented as we are no more directly publishing tracelogs into zipkin    
@@ -468,9 +477,20 @@ You can also use other messaging services like RabbitMQ, ActiveMQ etc.
 
 # Step 13: Store all Zipkin tracelogs into Elastic search so that we do not loose data when the zipkin server restarts.   
 
+a. Zipkin was using in-memory data store to store all its tracelogs.    
+This is not ideal in production as all data would be lost during server restarts.   
+So we will now configure Elastic search to store all the logs into a persistance state.   
+Note, that instead of Elasticsearch we can also configure Cassendra, MySQL or any other NoSQL or JDBC datastores.    
+
+b. For starting Elastic search and configuring its startup port, please refer to my Kafka repositiory where I have a seperate section for this.   
+
+c. To make zipkin use elasticsearch as a storage medium start zipkin with the following parameters:   
+--STORAGE_TYPE=elasticsearch --ES_HOSTS=http://localhost:9400 --ES_HTTP_LOGGING=BASIC    
+
+d. Re-start zipkin and make sure that Elasticsearch is also started.   
+
+f. Thats all needs to be done as the configuration is out-of-the-box.   
   
-
-
 
 ---   
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
