@@ -491,7 +491,7 @@ c. To make zipkin use elasticsearch as a storage medium start zipkin with the fo
 
 d. Re-start zipkin and make sure that Elasticsearch is also started.   
 
-f. Thats all needs to be done as the configuration is out-of-the-box.   
+f. Thats all needs to be done as the configuration is out-of-the-box. All tracelogs are now stored into the persistant storage.      
   
 
 ---   
