@@ -407,7 +407,7 @@ Start zipkin in our own custom port:
 Zipkin can be started in our own custom port using the command    
 java -jar zipkin-server-2.23.2-exec.jar --QUERY_PORT=9300     
 A host of other parameters can be configured during startup which is given in the below document url.    
-https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md 
+https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md    
 
 Alternatively if you want to start zipkin as a Spring boot project I have included a project named zipkin-tracing-server that can be used, but this supports Java 8 and hence it is not advisable to use this.    
 
@@ -434,8 +434,41 @@ d. Now restart the api-gateway and the login-service and launch the url for the 
 
 e. By this we have configured our two microservices to be traced by unique id using cloud slueth and zipkin across multiple service calls that happen internally.   
 
-# Step 12: Connect Zipkin and microservices to an intermediate middleware like Kafka/Rabit MQ.   
-   
+# Step 12: Connect Zipkin and microservices to an intermediate middleware like Kafka/Rabit MQ etc.   
+a. The method of connecting our microservices directly to Zipkin for tracing to prone to errors and scalability issues.    
+So we will introduce a middleware that will collect all the tracing data from our microservices and zipkin will connect to this middleware and pick up this data.   
+
+b. To do this our two microservices that use cloud sluth must have one more dependency.   
+In our case I am using kafka as the middleware so so the dependency I added for this in API gateway and Login Service is as follows:  
+```xml   
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+```  
+
+c. Next I start Apache Kafka and the default topic that would be created by cloud sluth for publishing is "zipkin"   
+
+d. Next we need to add the following properties in our API gateway and Login service properties files:   
+spring.zipkin.baseUrl=http://127.0.0.1:9300  -> This has to be commented as we are no more directly publishing tracelogs into zipkin    
+spring.zipkin.sender.type: kafka -> This has to be added to make cloud sluth know that the default collector for log tracing is going to be kafka    
+
+d. Commit this file into github.   
+
+f. Next start zipkin server with the following parameters to let it know that it has to collect trace logs from Kakfa.   
+java -jar zipkin-server-2.23.2-exec.jar --QUERY_PORT=9300 --KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092    
+
+Other kafka parameters can also be configured. Please check the below url for details:   
+https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#kafka-collector  
+
+g. Now start the API gateway, Login Service, Apache Kafka and Zipkin.   
+
+h. Thats it, and now you can see all the tracelogs of zipkin being collected from our middleware (Kakfa).   
+You can also use other messaging services like RabbitMQ, ActiveMQ etc.   
+
+# Step 13: Store all Zipkin tracelogs into Elastic search so that we do not loose data when the zipkin server restarts.   
+
+  
 
 
 
