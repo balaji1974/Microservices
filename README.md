@@ -1,6 +1,9 @@
 # Microservices - Step by Step      
 This has details to building microservices from scratch
 
+# My Final Microservices Architecture
+![alt text](https://github.com/balaji1974/microservices/blob/main/MyMicroservicesArchitecture.png)
+
 # Port Details  
 ##(will be updated as and when new services are added)  
 ### Spring Cloud Config Server
