@@ -70,6 +70,8 @@ spring.cloud.config.server.git.username=
 spring.cloud.config.server.git.password=   
 
 
+Note: For private repositories please generate a personal access token and use this in the place of password 
+
 f. Add the following annotation in the main class to make spring aware that this is a configuration server 
 @EnableConfigServer
 
