@@ -9,19 +9,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableEurekaServer
-public class EurekaNamingServerApplication implements CommandLineRunner {
+public class EurekaNamingServerApplication //implements CommandLineRunner 
+{
 	
-	@Autowired
-	BCryptPasswordEncoder passwordEncoder;
+	//@Autowired
+	//BCryptPasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(EurekaNamingServerApplication.class, args);
 	}
 
+	/*
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Pwd Encode : "+passwordEncoder.encode("randowpwd"));
 		
 	}
-
+	*/
 }
