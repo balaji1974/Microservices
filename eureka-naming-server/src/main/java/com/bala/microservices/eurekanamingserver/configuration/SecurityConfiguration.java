@@ -33,10 +33,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
          .hasRole("SYSTEM").anyRequest().denyAll().and()
          .httpBasic().and().csrf().disable();
    }
-/*
+
    @Bean
    public BCryptPasswordEncoder passwordEncoder() {
        return new BCryptPasswordEncoder();
    }
-*/
+   
+   
+
 }
