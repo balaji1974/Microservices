@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "dc4e17de-b696-4d7a-a6f5-183633895c5b",
+		"name": "Quartz Jobs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Delete Job",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobName\": \"Simple Cron Job2\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0/30 * * * * ?\",\n    \"description\": \"i am job number 1\",\n    \"interfaceName\": \"interface_1\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/deleteJob",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"deleteJob"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Job",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobName\": \"Simple Cron Job\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0 0/1 * 1/1 * ? *\",\n    \"description\": \"i am job number 2\",\n    \"interfaceName\": \"interface_2\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/saveOrUpdate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"saveOrUpdate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Job",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobId\" : 1,\n    \"jobName\": \"Simple Cron Job\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0/59 * * * * ?\",\n    \"description\": \"i am job number 1\",\n    \"interfaceName\": \"interface_1\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/saveOrUpdate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"saveOrUpdate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Jobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/getAllJobs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"getAllJobs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Display Job Metadata ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/metaData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"metaData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pause Job",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobId\": 1,\n    \"jobName\": \"Simple Cron Job\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0 0/1 * 1/1 * ? *\",\n    \"description\": \"i am job number 4\",\n    \"interfaceName\": \"interface_4\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pauseJob",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pauseJob"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resume Job",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobId\": 1,\n    \"jobName\": \"Simple Cron Job\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0 0/1 * 1/1 * ? *\",\n    \"description\": \"i am job number 4\",\n    \"interfaceName\": \"interface_4\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/resumeJob",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"resumeJob"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Run Job",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobId\": 1,\n    \"jobName\": \"Simple Cron Job\",\n    \"jobGroup\": \"CronJob\",\n    \"jobStatus\": \"SCHEDULED\",\n    \"jobClass\": \"com.bala.scheduler.schedulerservice.job.SimpleCronJob\",\n    \"cronExpression\": \"0 0/1 * 1/1 * ? *\",\n    \"description\": \"i am job number 4\",\n    \"interfaceName\": \"interface_4\",\n    \"repeatTime\": null,\n    \"cronJob\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/runJob",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"runJob"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

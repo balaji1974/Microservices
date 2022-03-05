@@ -494,8 +494,36 @@ d. Re-start zipkin and make sure that Elasticsearch is also started.
 f. Thats all needs to be done as the configuration is out-of-the-box. All tracelogs are now stored into the persistant storage.      
   
 
+# Misc services
+## A. Scheduler-service 
+```xml
+(Service creation can be done from a REST API endpoint and maintained)
+1. It is quite common that microservices need background services for this I have added a scheduler-service
+2. It has a database store and hence can be scaled to run mutiple instances 
+3. First time while running uncomment property 
+spring.quartz.jdbc.initialize-schema=always
+from the properties file for quartz to create a database store for its persistance 
+4. All quartz properties are configured in quartz.properties file 
+5. A sample json script has been provided for creating the scheduler-service and maintaing this service (modify/delete etc)
+6. Creating a new job is quite simple as creating a new java class in com.bala.scheduler.schedulerservice.job package and then calling the 
+REST end point POST http://localhost:8080/api/saveOrUpdate for creating the job. A sample body of this endpoint is given below: 
+{
+    "jobName": "Simple Cron Job",
+    "jobGroup": "CronJob",
+    "jobStatus": "SCHEDULED",
+    "jobClass": "com.bala.scheduler.schedulerservice.job.SimpleCronJob",
+    "cronExpression": "0 0/1 * 1/1 * ? *",
+    "description": "i am job number 2",
+    "interfaceName": "interface_2",
+    "repeatTime": null,
+    "cronJob": true
+}
+```
 ---   
+
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
 ---  
 ## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I will start seperate repo for each of them. Please refer them.  
+
+## Watch out for the spring security section which has lots of details on securing microservices. 
 ---   
