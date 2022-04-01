@@ -523,7 +523,9 @@ REST end point POST http://localhost:8080/api/saveOrUpdate for creating the job.
 
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
 ---  
-## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I will start seperate repo for each of them. Please refer them.  
+## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I have seperate repo for each of them. Please refer them.  
 
 ## Watch out for the spring security section which has lots of details on securing microservices. 
+
+## Watch out for devops section whch has lots of detaits on containeratization, kubernetes and builidng and deploying CI/CD pipelines 
 ---   
