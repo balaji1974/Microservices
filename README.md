@@ -519,7 +519,64 @@ REST end point POST http://localhost:8080/api/saveOrUpdate for creating the job.
     "cronJob": true
 }
 ```
----   
+
+---
+
+# A full spring boot app example for docker 
+## MySQL - run in docker 
+```xml
+docker pull mysql
+docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<pwd> -d mysql
+
+Connect to the database using any tool like MySQLWorkbench
+
+Next create database: scheduler
+Create user and password to connect to this database: sch-user & <pwd>
+
+Try to connect using this userid and check if everything is fine
+```
+## Spring boot application - Dockerization 
+```xml
+Go to to you application in eclipse 
+NOTE: That the application must be able to connect using the IP address of the MySQL port (running in docker or outside of docker) before building the application into a jar. 
+
+Eg. spring.datasource.url=jdbc:mysql://192.168.100.16:3306/scheduler 
+where 192.168.100.16:3306 is the IP address of mysql and not the localhost. 
+
+This can be achived by editing the my.cnf file and setting the bind address to 
+bind-address = 0.0.0.0 
+
+Next Add the following plugin setting in maven project and then clean and install
+<plugin>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-maven-plugin</artifactId>
+	<configuration>
+		<image>
+			<name>balaji1974/${project.artifactId}.${project.version}</name>
+		</image>
+		<pullPolicy>
+			IF_NOT_PRESENT
+		</pullPolicy>
+	</configuration>
+</plugin>
+
+If the project artifactId is scheduler-service and version is 0.0.1 then a jar file called scheduler-service-0.0.1.jar  will be created in target folder
+```
+## Creating the docker file and running it
+```xml
+Create a docker file in the root directory of the project and name it Dockerfile with the below settings: 
+FROM openjdk:11
+EXPOSE 8080
+ADD target/scheduler-service-0.0.1.jar scheduler-service-0.0.1.jar
+CMD ["java", "-jar", "scheduler-service-0.0.1.jar"]
+
+Next build the docker file by running the below command:
+docker build -t scheduler-service-0.0.1.jar .
+
+Run the scheduler service with the below command:
+docker container run -p 8080:8080 --name scheduler-service scheduler-service-0.0.1.jar
+```   
+
 
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
 ---  

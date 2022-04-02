@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.bala.scheduler</groupId>
 	<artifactId>scheduler-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>scheduler-service</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -64,12 +64,12 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
-						<name>balaji1974/sch-v1-${project.artifactId}.${project.version}</name>
+						<name>balaji1974/${project.artifactId}.${project.version}</name>
 					</image>
 					<pullPolicy>
 						IF_NOT_PRESENT
 					</pullPolicy>
-			</configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
