@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+    mysql:
+        image: mysql
+        mem_limit: 1000m
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: STKVALUE
+            MYSQL_DATABASE: scheduler
+            MYSQL_USER: sch-user
+            MYSQL_PASSWORD: samplepwd 
+        networks:
+            - myproject-network
+    scheduler-service:
+        image: balaji1974/scheduler-service:latest
+        depends_on: 
+            - mysql
+        mem_limit: 1000m
+        ports: 
+            - "8080:8080"
+        networks:
+            - myproject-network
+networks: 
+    myproject-network: 
