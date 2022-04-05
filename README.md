@@ -562,7 +562,6 @@ Next Add the following plugin setting in maven project and then clean and instal
 
 If the project artifactId is scheduler-service and version is 0.0.1 then a jar file called scheduler-service-0.0.1.jar  will be created in target folder
 ```
-## Creating the docker file and running it
 ```xml
 Create a docker file in the root directory of the project and name it Dockerfile with the below settings: 
 FROM openjdk:11
@@ -570,12 +569,33 @@ EXPOSE 8080
 ADD target/scheduler-service-0.0.1.jar scheduler-service-0.0.1.jar
 CMD ["java", "-jar", "scheduler-service-0.0.1.jar"]
 
-Next build the docker file by running the below command:
-docker build -t scheduler-service-0.0.1.jar .
+Next build the docker file by running the below command: (where balaji1974 is my docker repo)
+docker build -t balaji1974/scheduler-service:latest -t balaji1974/scheduler-service:v0.0.1 .
+(I have added multiple tags-latest and v0.0.1 to my imaage)
 
 Run the scheduler service with the below command:
-docker container run -p 8080:8080 --name scheduler-service scheduler-service-0.0.1.jar
-```   
+docker container run -p 8080:8080 --name scheduler-service balaji1974/scheduler-service:latest
+
+(This will run the image if it is already present or else it will fetch from the docker hub)
+```
+
+## Push / pull to docker hub: 
+(Note for free account, push/pull works only for public repo or the first 5 private repositories 
+Also push works with docker desktop for private repo but pull does not work) 
+```xml
+docker push balaji1974/scheduler-service:latest
+docker push balaji1974/scheduler-service:v0.0.1
+docker pull balaji1974/scheduler-service:latest
+
+```
+
+## Docker compose - Microservices Installation and Practical approach 
+```xml
+Docker compose is already part of Docker desktop and so install docker desktop on mac/windows to get it
+
+Check the docker-compose.yml file
+
+```
 
 
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
