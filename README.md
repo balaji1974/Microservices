@@ -535,10 +535,11 @@ Create user and password to connect to this database: sch-user & <pwd>
 
 Try to connect using this userid and check if everything is fine
 ```
+
 ## Spring boot application - Dockerization 
 ```xml
-Go to to you application in eclipse 
-NOTE: That the application must be able to connect using the IP address of the MySQL port (running in docker or outside of docker) before building the application into a jar. 
+Go to your application in eclipse 
+NOTE: The application must be able to connect using the IP address of the MySQL port (running in docker or outside of docker) before building the application into a jar. 
 
 Eg. spring.datasource.url=jdbc:mysql://192.168.100.16:3306/scheduler 
 where 192.168.100.16:3306 is the IP address of mysql and not the localhost. 
@@ -594,6 +595,37 @@ docker pull balaji1974/scheduler-service:latest
 Docker compose is already part of Docker desktop and so install docker desktop on mac/windows to get it
 
 Check the docker-compose.yml file
+
+```
+
+## Spring boot application - Kubernetes
+```xml
+
+Creating a kubenetes deployment:
+--------------------------------
+kubectl create deployment scheduler-service --image=balaji1974/scheduler-service:latest 
+-> This creates a pod, replicaset & deployment for us
+
+
+Expose deployment to the outside world:
+---------------------------------------
+kubectl expose deployment scheduler-service --type=LoadBalancer --port=8080 
+-> This creates a service for us 
+
+Get Details
+-----------
+kubectl get <pods/replicaset/deployment/service> -> Use any one of these parameters to get the details about them from a running cluster
+
+Kubernetes basic architectural units
+------------------------------------
+Service contains -> ReplicaSets contains -> Pods contains -> Containers
+
+
+Scale deployments
+-----------------
+kubectl scale deployment scheduler-service --replicas=3 
+
+
 
 ```
 
