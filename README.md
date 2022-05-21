@@ -520,10 +520,11 @@ REST end point POST http://localhost:8080/api/saveOrUpdate for creating the job.
 }
 ```
 
----
+---------------------------------------------------
 
 # A full spring boot app example for docker 
 ## MySQL - run in docker 
+
 ```xml
 docker pull mysql
 docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<pwd> -d mysql
@@ -583,6 +584,7 @@ docker container run -p 8080:8080 --name scheduler-service balaji1974/scheduler-
 ## Push / pull to docker hub: 
 (Note for free account, push/pull works only for public repo or the first 5 private repositories 
 Also push works with docker desktop for private repo but pull does not work) 
+Free account allows only one private repo to have multiple tags. 
 ```xml
 docker push balaji1974/scheduler-service:latest
 docker push balaji1974/scheduler-service:v0.0.1
@@ -600,31 +602,63 @@ Check the docker-compose.yml file
 
 ## Spring boot application - Kubernetes
 ```xml
+All the below done inside GCP: 
+------------------------------
+1. First Create a K8S cluster
+2. Connect to the cluster 
+3. Check K8S version - kubectl version
+4. Check docker version - docker version
+5. Next login to docker - docker login 
 
 Creating a kubenetes deployment:
 --------------------------------
 kubectl create deployment scheduler-service --image=balaji1974/scheduler-service:latest 
--> This creates a pod, replicaset & deployment for us
+kubectl create deployment test-subsystem-01 --image=balaji1974/test-subsystem-01:latest
+-> This creates a pod, replicaset & deployment for us 
 
 
 Expose deployment to the outside world:
 ---------------------------------------
 kubectl expose deployment scheduler-service --type=LoadBalancer --port=8080 
+kubectl expose deployment test-subsystem-01 --type=LoadBalancer --port=8080 
 -> This creates a service for us 
 
 Get Details
 -----------
 kubectl get <pods/replicaset/deployment/service> -> Use any one of these parameters to get the details about them from a running cluster
 
+Delete Details 
+--------------
+kubectl delete <pods/replicaset/deployment/service> <name>
+
 Kubernetes basic architectural units
 ------------------------------------
 Service contains -> ReplicaSets contains -> Pods contains -> Containers
 
-
 Scale deployments
 -----------------
 kubectl scale deployment scheduler-service --replicas=3 
+kubectl scale deployment test-subsystem-01 --replicas=3 
 
+Move to next version - attach new image to deployment
+-----------------------------------------------------
+kubectl set image deployment test-subsystem-01 test-subsystem-01=balaji1974/test-subsystem-01:v0.0.2
+(first test-subsystem-01 is the name of the deployment and 
+second test-subsystem-01 is the name of the container and 
+third test-subsystem-01 is the name of the image)
+
+Notes: 
+-----
+Pods are throw away units which have dynamic IP address. 
+A service is tied with Pods and exposes a permenant IP to the outside world. 
+
+
+If our service name is hello-world then kubernetes exposes it in an environment variable called 
+HELLO_WORLD_SERVICE_HOST to other services when a new pod is launched
+
+HOSTNAME is the environment variable for the pod name 
+
+kubectl create secret generic regcred --from-file=.dockerconfigjson=./.docker/config.json --type=kubernetes.io/dockerconfigjson
 
 
 ```
