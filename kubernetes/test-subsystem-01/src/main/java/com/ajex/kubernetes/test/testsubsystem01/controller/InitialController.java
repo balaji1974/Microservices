@@ -1,31 +1,32 @@
 package com.ajex.kubernetes.test.testsubsystem01.controller;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 public class InitialController {
 	
-	@Autowired
-	private Environment environment;
-	
-	@GetMapping("/calculator/square/{number}")
-	public ResponseEntity<Object> startup(@PathVariable Integer number) {
-		Map<String, Object> p=new HashMap<String, Object>();
-		p.put("result", number*number);
-		p.put("pod-name", environment.getProperty("HOSTNAME") );
-		return ResponseEntity.status(HttpStatus.CREATED).body(
-	            Collections.unmodifiableMap(p)
-				);
+	@GetMapping("/calculate/square/{number}")
+	public ResponseEntity<String> startup(@PathVariable Integer number) {
+		WebClient client = WebClient.builder()
+				  .baseUrl("http://test-subsystem-02:8090/calculate/square/"+number)
+				  .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE) 
+				  .build();
+		return client.get()
+	    .retrieve()
+	    .onStatus(
+	        status -> status.value() == 401,
+	        clientResponse -> Mono.empty()
+	    )
+	    .toEntity(String.class)
+	    .block();
 	}
 
 }

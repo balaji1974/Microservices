@@ -606,9 +606,11 @@ All the below done inside GCP:
 ------------------------------
 1. First Create a K8S cluster
 2. Connect to the cluster 
-3. Check K8S version - kubectl version
-4. Check docker version - docker version
-5. Next login to docker - docker login 
+3. Copy the connect cluster command and paste it in the command line interface inside the cluster and run it (something similar like below)
+gcloud container clusters get-credentials <cluster-name> --zone <zone-name> --project <project-name>
+4. Check K8S version - kubectl version
+5. Check docker version - docker version
+6. Next login to docker - docker login 
 
 Creating a kubenetes deployment:
 --------------------------------
@@ -630,6 +632,7 @@ kubectl get <pods/replicaset/deployment/service> -> Use any one of these paramet
 Delete Details 
 --------------
 kubectl delete <pods/replicaset/deployment/service> <name>
+kubectl delete all -l app=test-subsystem-01 
 
 Kubernetes basic architectural units
 ------------------------------------
@@ -640,12 +643,30 @@ Scale deployments
 kubectl scale deployment scheduler-service --replicas=3 
 kubectl scale deployment test-subsystem-01 --replicas=3 
 
+Autoscale deployements
+----------------------
+kubectl autoscale deployment test-subsystem-01 --min=1 --max=3 --cpu-percent=5 
+
 Move to next version - attach new image to deployment
 -----------------------------------------------------
 kubectl set image deployment test-subsystem-01 test-subsystem-01=balaji1974/test-subsystem-01:v0.0.2
 (first test-subsystem-01 is the name of the deployment and 
 second test-subsystem-01 is the name of the container and 
 third test-subsystem-01 is the name of the image)
+
+To tail logs of a service
+-------------------------
+kubectl describe svc <servicename>
+
+
+Important build and deploy commands of CI/CD pipeline 
+-----------------------------------------------------
+docker build -t balaji1974/test-subsystem-02:v0.0.1 .
+docker push balaji1974/test-subsystem-02:v0.0.1
+kubectl create deployment test-subsystem-02 --image=balaji1974/test-subsystem-02:v0.0.1
+kubectl expose deployment test-subsystem-02 --type=LoadBalancer --port=8080 
+kubectl delete all -l app=test-subsystem-02
+kubectl describe svc test-subsystem-02
 
 Notes: 
 -----
@@ -672,3 +693,7 @@ kubectl create secret generic regcred --from-file=.dockerconfigjson=./.docker/co
 
 ## Watch out for devops section whch has lots of detaits on containeratization, kubernetes and builidng and deploying CI/CD pipelines 
 ---   
+
+
+
+
