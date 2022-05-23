@@ -656,7 +656,7 @@ third test-subsystem-01 is the name of the image)
 
 To tail logs of a service
 -------------------------
-kubectl describe svc <servicename>
+kubectl logs --follow <pod_name>
 
 
 Important build and deploy commands of CI/CD pipeline 
@@ -666,7 +666,8 @@ docker push balaji1974/test-subsystem-02:v0.0.1
 kubectl create deployment test-subsystem-02 --image=balaji1974/test-subsystem-02:v0.0.1
 kubectl expose deployment test-subsystem-02 --type=LoadBalancer --port=8080 
 kubectl delete all -l app=test-subsystem-02
-kubectl describe svc test-subsystem-02
+kubectl get pods
+kubectl logs --follow <pod_name>
 
 Notes: 
 -----
