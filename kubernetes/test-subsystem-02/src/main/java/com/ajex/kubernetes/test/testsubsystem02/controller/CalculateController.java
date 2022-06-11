@@ -21,7 +21,7 @@ public class CalculateController {
 	public ResponseEntity<Object> startup(@PathVariable Integer number) {
 		Map<String, Object> p=new HashMap<String, Object>();
 		p.put("result", number*number);
-		p.put("service-name", environment.getProperty("TESTSUBSYSTEM02_SERVICE_HOST") );
+		p.put("service-name", environment.getProperty("TEST_SUBSYSTEM_02_SERVICE_HOST") );
 		return ResponseEntity.status(HttpStatus.CREATED).body(
 	            Collections.unmodifiableMap(p)
 				);

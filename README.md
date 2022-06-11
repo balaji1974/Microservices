@@ -685,6 +685,23 @@ kubectl create secret generic regcred --from-file=.dockerconfigjson=./.docker/co
 
 ```
 
+## Github actions
+```xml
+Select the project in Google developer console -> IAM & ADMIN -> Service Accounts 
+Create Service Account -> Enter service account name -> eg. github-actions -> Save (skip all other portions)
+Next click the account created -> Keys (tab) -> Add Key -> Create New Key -> JSON -> Create (this will download a new key file)
+Copy this service account name and go to IAM 
+IAM -> Add -> Enter the copied service account name -> Role -> Storage Admin -> Save 
+
+
+
+```
+
+
+
+## Spring boot and application.properties 
+### https://pushbuildtestdeploy.com/spring-boot-application.properties-in-kubernetes/
+
 
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
 ---  
