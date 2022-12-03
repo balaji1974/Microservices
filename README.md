@@ -693,10 +693,21 @@ Next click the account created -> Keys (tab) -> Add Key -> Create New Key -> JSO
 Copy this service account name and go to IAM 
 IAM -> Add -> Enter the copied service account name -> Role -> Storage Admin -> Save 
 
-
-
 ```
 
+## Spring boot - Web Sockets
+```xml
+simple-socket
+-------------
+Please refer the application simple-socket
+
+Explaination of this app given in the below link:
+https://spring.io/guides/gs/messaging-stomp-websocket/
+
+After starting the application it can be viewed at the following link: 
+http://localhost:8080 
+
+```
 
 
 ## Spring boot and application.properties 
