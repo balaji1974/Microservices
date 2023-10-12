@@ -496,8 +496,235 @@ d. Re-start zipkin and make sure that Elasticsearch is also started.
 f. Thats all needs to be done as the configuration is out-of-the-box. All tracelogs are now stored into the persistant storage.      
   
 
----   
+# Misc services
+## A. Scheduler-service 
+```xml
+(Service creation can be done from a REST API endpoint and maintained)
+1. It is quite common that microservices need background services for this I have added a scheduler-service
+2. It has a database store and hence can be scaled to run mutiple instances 
+3. First time while running uncomment property 
+spring.quartz.jdbc.initialize-schema=always
+from the properties file for quartz to create a database store for its persistance 
+4. All quartz properties are configured in quartz.properties file 
+5. A sample json script has been provided for creating the scheduler-service and maintaing this service (modify/delete etc)
+6. Creating a new job is quite simple as creating a new java class in com.bala.scheduler.schedulerservice.job package and then calling the 
+REST end point POST http://localhost:8080/api/saveOrUpdate for creating the job. A sample body of this endpoint is given below: 
+{
+    "jobName": "Simple Cron Job",
+    "jobGroup": "CronJob",
+    "jobStatus": "SCHEDULED",
+    "jobClass": "com.bala.scheduler.schedulerservice.job.SimpleCronJob",
+    "cronExpression": "0 0/1 * 1/1 * ? *",
+    "description": "i am job number 2",
+    "interfaceName": "interface_2",
+    "repeatTime": null,
+    "cronJob": true
+}
+```
+
+---------------------------------------------------
+
+# A full spring boot app example for docker 
+## MySQL - run in docker 
+
+```xml
+docker pull mysql
+docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<pwd> -d mysql
+
+Connect to the database using any tool like MySQLWorkbench
+
+Next create database: scheduler
+Create user and password to connect to this database: sch-user & <pwd>
+
+Try to connect using this userid and check if everything is fine
+```
+
+## Spring boot application - Dockerization 
+```xml
+Go to your application in eclipse 
+NOTE: The application must be able to connect using the IP address of the MySQL port (running in docker or outside of docker) before building the application into a jar. 
+
+Eg. spring.datasource.url=jdbc:mysql://192.168.100.16:3306/scheduler 
+where 192.168.100.16:3306 is the IP address of mysql and not the localhost. 
+
+This can be achived by editing the my.cnf file and setting the bind address to 
+bind-address = 0.0.0.0 
+
+Next Add the following plugin setting in maven project and then clean and install
+<plugin>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-maven-plugin</artifactId>
+	<configuration>
+		<image>
+			<name>balaji1974/${project.artifactId}.${project.version}</name>
+		</image>
+		<pullPolicy>
+			IF_NOT_PRESENT
+		</pullPolicy>
+	</configuration>
+</plugin>
+
+If the project artifactId is scheduler-service and version is 0.0.1 then a jar file called scheduler-service-0.0.1.jar  will be created in target folder
+```
+```xml
+Create a docker file in the root directory of the project and name it Dockerfile with the below settings: 
+FROM openjdk:11
+EXPOSE 8080
+ADD target/scheduler-service-0.0.1.jar scheduler-service-0.0.1.jar
+CMD ["java", "-jar", "scheduler-service-0.0.1.jar"]
+
+Next build the docker file by running the below command: (where balaji1974 is my docker repo)
+docker build -t balaji1974/scheduler-service:latest -t balaji1974/scheduler-service:v0.0.1 .
+(I have added multiple tags-latest and v0.0.1 to my imaage)
+
+Run the scheduler service with the below command:
+docker container run -p 8080:8080 --name scheduler-service balaji1974/scheduler-service:latest
+
+(This will run the image if it is already present or else it will fetch from the docker hub)
+```
+
+## Push / pull to docker hub: 
+(Note for free account, push/pull works only for public repo or the first 5 private repositories 
+Also push works with docker desktop for private repo but pull does not work) 
+Free account allows only one private repo to have multiple tags. 
+```xml
+docker push balaji1974/scheduler-service:latest
+docker push balaji1974/scheduler-service:v0.0.1
+docker pull balaji1974/scheduler-service:latest
+
+```
+
+## Docker compose - Microservices Installation and Practical approach 
+```xml
+Docker compose is already part of Docker desktop and so install docker desktop on mac/windows to get it
+
+Check the docker-compose.yml file
+
+```
+
+## Spring boot application - Kubernetes
+```xml
+All the below done inside GCP: 
+------------------------------
+1. First Create a K8S cluster
+2. Connect to the cluster 
+3. Copy the connect cluster command and paste it in the command line interface inside the cluster and run it (something similar like below)
+gcloud container clusters get-credentials <cluster-name> --zone <zone-name> --project <project-name>
+4. Check K8S version - kubectl version
+5. Check docker version - docker version
+6. Next login to docker - docker login 
+
+Creating a kubenetes deployment:
+--------------------------------
+kubectl create deployment scheduler-service --image=balaji1974/scheduler-service:latest 
+kubectl create deployment test-subsystem-01 --image=balaji1974/test-subsystem-01:latest
+-> This creates a pod, replicaset & deployment for us 
+
+
+Expose deployment to the outside world:
+---------------------------------------
+kubectl expose deployment scheduler-service --type=LoadBalancer --port=8080 
+kubectl expose deployment test-subsystem-01 --type=LoadBalancer --port=8080 
+-> This creates a service for us 
+
+Get Details
+-----------
+kubectl get <pods/replicaset/deployment/service> -> Use any one of these parameters to get the details about them from a running cluster
+
+Delete Details 
+--------------
+kubectl delete <pods/replicaset/deployment/service> <name>
+kubectl delete all -l app=test-subsystem-01 
+
+Kubernetes basic architectural units
+------------------------------------
+Service contains -> ReplicaSets contains -> Pods contains -> Containers
+
+Scale deployments
+-----------------
+kubectl scale deployment scheduler-service --replicas=3 
+kubectl scale deployment test-subsystem-01 --replicas=3 
+
+Autoscale deployements
+----------------------
+kubectl autoscale deployment test-subsystem-01 --min=1 --max=3 --cpu-percent=5 
+
+Move to next version - attach new image to deployment
+-----------------------------------------------------
+kubectl set image deployment test-subsystem-01 test-subsystem-01=balaji1974/test-subsystem-01:v0.0.2
+(first test-subsystem-01 is the name of the deployment and 
+second test-subsystem-01 is the name of the container and 
+third test-subsystem-01 is the name of the image)
+
+To tail logs of a service
+-------------------------
+kubectl logs --follow <pod_name>
+
+
+Important build and deploy commands of CI/CD pipeline 
+-----------------------------------------------------
+docker build -t balaji1974/test-subsystem-02:v0.0.1 .
+docker push balaji1974/test-subsystem-02:v0.0.1
+kubectl create deployment test-subsystem-02 --image=balaji1974/test-subsystem-02:v0.0.1
+kubectl expose deployment test-subsystem-02 --type=LoadBalancer --port=8080 
+kubectl delete all -l app=test-subsystem-02
+kubectl get pods
+kubectl logs --follow <pod_name>
+
+Notes: 
+-----
+Pods are throw away units which have dynamic IP address. 
+A service is tied with Pods and exposes a permenant IP to the outside world. 
+
+
+If our service name is hello-world then kubernetes exposes it in an environment variable called 
+HELLO_WORLD_SERVICE_HOST to other services when a new pod is launched
+
+HOSTNAME is the environment variable for the pod name 
+
+kubectl create secret generic regcred --from-file=.dockerconfigjson=./.docker/config.json --type=kubernetes.io/dockerconfigjson
+
+
+```
+
+## Github actions
+```xml
+Select the project in Google developer console -> IAM & ADMIN -> Service Accounts 
+Create Service Account -> Enter service account name -> eg. github-actions -> Save (skip all other portions)
+Next click the account created -> Keys (tab) -> Add Key -> Create New Key -> JSON -> Create (this will download a new key file)
+Copy this service account name and go to IAM 
+IAM -> Add -> Enter the copied service account name -> Role -> Storage Admin -> Save 
+
+```
+
+## Spring boot - Web Sockets
+```xml
+simple-socket
+-------------
+Please refer the application simple-socket
+
+Explaination of this app given in the below link:
+https://spring.io/guides/gs/messaging-stomp-websocket/
+
+After starting the application it can be viewed at the following link: 
+http://localhost:8080 
+
+```
+
+
+## Spring boot and application.properties 
+### https://pushbuildtestdeploy.com/spring-boot-application.properties-in-kubernetes/
+
+
 ## With this we have come to the end of major components of the microservices architecture using Spring. 
 ---  
-## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I will start seperate repo for each of them. Please refer them.  
+## Next up is adding security to the microservices, containerization with Docker and deployig it on Kubernetes clusters. I have seperate repo for each of them. Please refer them.  
+
+## Watch out for the spring security section which has lots of details on securing microservices. 
+
+## Watch out for devops section whch has lots of detaits on containeratization, kubernetes and builidng and deploying CI/CD pipelines 
 ---   
+
+
+
+

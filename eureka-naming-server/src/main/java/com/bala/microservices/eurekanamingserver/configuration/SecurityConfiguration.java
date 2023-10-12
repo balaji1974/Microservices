@@ -16,13 +16,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Order(1)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+/*
    @Autowired
    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 	   String password = passwordEncoder().encode("randompwd");
        auth.inMemoryAuthentication().withUser("balaji")
          .password(password).roles("SYSTEM");
    }
-
+*/
    @Override
    protected void configure(HttpSecurity http) throws Exception {
        http.sessionManagement()
@@ -32,9 +33,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
          .hasRole("SYSTEM").anyRequest().denyAll().and()
          .httpBasic().and().csrf().disable();
    }
-   
-   @Bean
-   public BCryptPasswordEncoder passwordEncoder() {
-       return new BCryptPasswordEncoder();
-   }
+
+	/*
+	 * @Bean public BCryptPasswordEncoder passwordEncoder() { return new
+	 * BCryptPasswordEncoder(); }
+	 * 
+	 */
+
 }
